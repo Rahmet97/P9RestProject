@@ -1,12 +1,23 @@
 from rest_framework.serializers import ModelSerializer
 
-from api.models import Product
+from api.models import Product, Category
+
+
+class CategorySerializer(ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
 
 
 class ProductSerializer(ModelSerializer):
+    category = CategorySerializer()
 
-    # def create(self, validated_data):
-    #     return Product.objects.create(**validated_data)
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+
+class ProductSerializerForCreate(ModelSerializer):
 
     class Meta:
         model = Product
