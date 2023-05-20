@@ -3,27 +3,31 @@ from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import UserSerializer
+from .services import register_service, reset_password_service, reset_password_confirm_service
 
 
 class RegisterAPIView(APIView):
 
     def post(self, request):
-        password1 = request.data.get('password1')
-        password2 = request.data.get('password2')
-        email = request.data.get('email')
-        username = request.data.get('username')
-        if password1 == password2:
-            if User.objects.filter(username=username).exists():
-                return Response({'error': 'This username already exists!'}, status=405)
-            if User.objects.filter(email=email).exists():
-                return Response({'error': 'This email already exists!'}, status=405)
-            serializer = UserSerializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
+        response = register_service(request.data)
+        if response['success']:
+            return Response(status=201)
+        return Response(response, status=405)
 
-            user = User.objects.get(username=username)
-            user.set_password(password1)
-            user.save()
-        else:
-            return Response({'error': 'Passwords are not same!'}, status=405)
-        return Response(status=201)
+
+class ResetPasswordAPIView(APIView):
+
+    def post(self, request):
+        response = reset_password_service(request)
+        if response['success']:
+            return Response({'message': 'sent'})
+        return Response(response, status=404)
+
+
+class PasswordResetConfirmAPIView(APIView):
+
+    def post(self, request, token, uuid):
+        response = reset_password_confirm_service(request, token, uuid)
+        if response['success']:
+            return Response({'message': 'Password changed'})
+        return Response(response, status=400)

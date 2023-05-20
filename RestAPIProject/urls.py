@@ -23,6 +23,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+from accounts.views import ResetPasswordAPIView, PasswordResetConfirmAPIView
+
 router = routers.DefaultRouter()
 schema_view = get_swagger_view(title="API Documentation")
 
@@ -35,4 +37,6 @@ urlpatterns = [
     # JWT
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/password/reset/', ResetPasswordAPIView.as_view(), name='password-reset'),
+    path('api/password/reset/<str:token>/<str:uuid>/', PasswordResetConfirmAPIView.as_view(), name='password-reset-confirm'),
 ]

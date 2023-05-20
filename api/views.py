@@ -27,9 +27,6 @@ class ProductAPIView(ListCreateAPIView):
             return (IsAuthenticated,)
 
 class ProductUpdateDeleteAPIView(RetrieveUpdateDestroyAPIView):
-    queryset = Product.objects.filter(
-        Q(date__gte=datetime.now() - timedelta(days=5),
-        Q(date__lte=datetime.now())
-    ))
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = ()
