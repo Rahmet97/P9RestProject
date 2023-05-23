@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from api.models import Product, Category
+from api.models import Product, Category, ShoppingCard
 
 
 class CategorySerializer(ModelSerializer):
@@ -22,3 +22,24 @@ class ProductSerializerForCreate(ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
+
+
+class ProductSerializerForCard(ModelSerializer):
+
+    class Meta:
+        model = Product
+        fields = ('title', 'price', 'category')
+
+
+class ShoppingCardSerializer(ModelSerializer):
+    class Meta:
+        model = ShoppingCard
+        fields = ('product', 'quantity',  'user', 'date')
+
+
+class ShoppingCardForDetailSerializer(ModelSerializer):
+    product = ProductSerializerForCard()
+
+    class Meta:
+        model = ShoppingCard
+        fields = ('product', 'quantity')

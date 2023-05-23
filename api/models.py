@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -21,3 +22,17 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class ShoppingCard(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Shopping Card'
+        verbose_name_plural = 'Shopping Cards'
+
+    def __str__(self):
+        return self.product.title
