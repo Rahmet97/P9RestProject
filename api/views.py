@@ -7,7 +7,8 @@ from rest_framework.views import APIView
 from api.models import Product, ShoppingCard
 from api.permissions import IsAuthenticatedOrReadOnly2
 from api.serializers import ProductSerializer, ProductSerializerForCreate, ShoppingCardSerializer, \
-    ShoppingCardForDetailSerializer
+    ShoppingCardForDetailSerializer, EmailSerializer
+from .tasks import send_email
 
 
 class ProductAPIView(ListCreateAPIView):
@@ -71,3 +72,18 @@ class DeleteFromCardAPIView(APIView):
         except ShoppingCard.DoesNotExist:
             return Response({'message': 'Bunday mahsulot mavjud emas'})
         return Response(status=204)
+
+
+class SendMail(APIView):
+    permission_classes = ()
+
+    def post(self, request):
+        try:
+            serializer = EmailSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            email = serializer.validated_data.get('email')
+            message = 'Test message'
+            q = send_email.delay(email, message)
+        except Exception as e:
+            return Response({'success': False, 'message': f'{e}'})
+        return Response({'success': True, 'message': 'Yuborildi'})

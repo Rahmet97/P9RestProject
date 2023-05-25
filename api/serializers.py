@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, Serializer, EmailField
 
 from api.models import Product, Category, ShoppingCard
 
@@ -43,3 +43,7 @@ class ShoppingCardForDetailSerializer(ModelSerializer):
     class Meta:
         model = ShoppingCard
         fields = ('product', 'quantity')
+
+
+class EmailSerializer(Serializer):
+    email = EmailField()
