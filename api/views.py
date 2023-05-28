@@ -1,8 +1,12 @@
+from django.conf import settings
+from django.core.cache import cache
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.db.models import Q, Sum
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated, SAFE_METHODS
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 
 from api.models import Product, ShoppingCard
 from api.permissions import IsAuthenticatedOrReadOnly2
@@ -10,28 +14,33 @@ from api.serializers import ProductSerializer, ProductSerializerForCreate, Shopp
     ShoppingCardForDetailSerializer, EmailSerializer
 from .tasks import send_email
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
 
-class ProductAPIView(ListCreateAPIView):
-    queryset = Product.objects.all()
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+
+class ProductViewSet(ModelViewSet):
+    # queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly2,)
+    permission_classes = ()
+
+    def get_queryset(self):
+        if 'products' in cache:
+            pass
+        else:
+            products = Product.objects.all()
+            serializer = ProductSerializer(products, many=True)
+            cache.set('products', serializer.data, timeout=CACHE_TTL)
+            return 
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return ProductSerializer
-        elif self.request.method == 'POST':
+        elif self.request.method == 'POST' or \
+                self.request.method == 'PUT' or \
+                self.request.method == 'PATCH':
             return ProductSerializerForCreate
-
-    def get_permission_classes(self):
-        if self.request.method == 'GET':
-            return tuple()
-        else:
-            return (IsAuthenticated,)
-
-class ProductUpdateDeleteAPIView(RetrieveUpdateDestroyAPIView):
-    queryset = Product.objects.all()[:9]
-    serializer_class = ProductSerializer
-    permission_classes = ()
 
 
 class AddToShoppingCardAPIView(APIView):

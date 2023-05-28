@@ -11,6 +11,9 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
+        indexes = [
+            models.Index(fields=['name'])
+        ]
 
 
 class Product(models.Model):
@@ -19,6 +22,11 @@ class Product(models.Model):
     address = models.CharField(max_length=150)
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['title', 'price', 'address'])
+        ]
 
     def __str__(self):
         return self.title
