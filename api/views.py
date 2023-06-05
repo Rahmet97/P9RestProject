@@ -8,11 +8,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from api.models import Product, ShoppingCard
+from api.models import Product, ShoppingCard, UserData
 from api.permissions import IsAuthenticatedOrReadOnly2
 from api.serializers import ProductSerializer, ProductSerializerForCreate, ShoppingCardSerializer, \
-    ShoppingCardForDetailSerializer, EmailSerializer
-from .tasks import send_email
+    ShoppingCardForDetailSerializer, EmailSerializer, PhoneSerializer
+from .tasks import send_email, send_sms
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -95,4 +95,17 @@ class SendMail(APIView):
             q = send_email.delay(email, message)
         except Exception as e:
             return Response({'success': False, 'message': f'{e}'})
+        return Response({'success': True, 'message': 'Yuborildi'})
+
+
+class SendVerificationCode(APIView):
+    permission_classes = ()
+
+    def post(self, request):
+        phone = request.data['phone']
+        user = UserData.objects.filter(phone=phone)
+        if user:
+            send_sms.delay(phone)
+        else:
+            return Response({'success': False, 'message': 'Bunday foydalanuvchi mavjud emas!'})
         return Response({'success': True, 'message': 'Yuborildi'})

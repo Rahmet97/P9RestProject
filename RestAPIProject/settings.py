@@ -174,14 +174,14 @@ EMAIL_HOST_PASSWORD = 'hxcleicnkqftuqjc'
 CELERY_TIMEZONE = "Asia/Tashkent"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
-CELERY_RESULT_BACKEND = os.getenv("CELERY_BROKER_REDIS_URL", "redis://localhost:6379/0")
-CELERY_BROKER_URL = os.getenv('CELERY_BROKER_REDIS_URL', default='redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = os.getenv("CELERY_BROKER_REDIS_URL", "redis://redis:6379/0")
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_REDIS_URL', default='redis://redis:6379/0')
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
 
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/0",
+        "LOCATION": "redis://redis:6379/0",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }

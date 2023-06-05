@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Category, ShoppingCard
+from .models import Product, Category, ShoppingCard, UserData
 from modeltranslation.admin import TranslationAdmin
 
 
@@ -7,4 +7,4 @@ from modeltranslation.admin import TranslationAdmin
 class ProductAdmin(TranslationAdmin):
     pass
 
-admin.site.register((Category, ShoppingCard))
+admin.site.register((Category, ShoppingCard, UserData))
