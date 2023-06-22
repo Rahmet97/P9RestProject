@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from accounts.models import UserData
 from django.db import models
 
 
@@ -22,6 +22,7 @@ class Product(models.Model):
     address = models.CharField(max_length=150)
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
+    picture = models.ImageField(upload_to='pics')
 
     class Meta:
         indexes = [
@@ -35,7 +36,7 @@ class Product(models.Model):
 class ShoppingCard(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserData, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -46,9 +47,9 @@ class ShoppingCard(models.Model):
         return self.product.title
 
 
-class UserData(models.Model):
-    phone = models.IntegerField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f'{self.user.first_name} {self.user.last_name}'
+# class UserData(models.Model):
+#     phone = models.IntegerField()
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#
+#     def __str__(self):
+#         return f'{self.user.first_name} {self.user.last_name}'

@@ -109,3 +109,11 @@ class SendVerificationCode(APIView):
         else:
             return Response({'success': False, 'message': 'Bunday foydalanuvchi mavjud emas!'})
         return Response({'success': True, 'message': 'Yuborildi'})
+
+
+class TestAPIView(APIView):
+    permission_classes = ()
+
+    def get(self, request):
+        print(request.META.get('REMOTE_ADDR'))
+        return Response({'remote_addr': request.META.get('REMOTE_ADDR')})

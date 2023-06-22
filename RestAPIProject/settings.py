@@ -61,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'accounts.middleware.BlockAdminMiddleware',
 ]
 
 ROOT_URLCONF = 'RestAPIProject.urls'
@@ -190,5 +191,7 @@ CACHES = {
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
+
+AUTH_USER_MODEL = 'accounts.UserData'
 
 CACHE_TTL = 60 * 1
