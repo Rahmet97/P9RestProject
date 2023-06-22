@@ -4,7 +4,7 @@ services:
   drf:
     build: .
     container_name: drf
-    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn --bind 0.0.0.0:8000 RestAPIProject.wsgi
     volumes:
       - .:/app
       - static_volume:/app/static
