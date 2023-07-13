@@ -20,4 +20,4 @@ jobs:
 
       - name: Deploy to DigitalOcean
         run: |
-          ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} user@your-droplet-ip 'cd /path/to/your/project && docker-compose down && docker-compose pull && docker-compose up -d'
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} root@159.223.125.250 'cd /home/user/P9RestProject && docker-compose down && docker-compose pull && docker-compose up -d'
