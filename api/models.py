@@ -22,7 +22,7 @@ class Product(models.Model):
     address = models.CharField(max_length=150)
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
-    picture = models.ImageField(upload_to='pics')
+    picture = models.ImageField(upload_to='pics', blank=True, null=True)
 
     class Meta:
         indexes = [

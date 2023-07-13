@@ -33,6 +33,7 @@ urlpatterns = [
     path('api/', include("api.urls")),
     path('accounts/', include("accounts.urls")),
     path('docs/', schema_view),
+    path('paycom/', include("paycom.urls")),
 
     # JWT
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
